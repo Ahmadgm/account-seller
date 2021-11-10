@@ -23,7 +23,7 @@
     "discord-api-types": "^0.24.0",
     "discord.js": "^13.3.1",
     "express": "^4.17.1",
-    "node": "^17.0.1",
+    "node": "^16.13.0",
     "probot-tax-calculator": "^3.0.0",
     "quick.db": "^7.1.3"
   }
