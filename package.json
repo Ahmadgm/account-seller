@@ -1,0 +1,30 @@
+{
+  "name": "account-seller",
+  "version": "0.8.9",
+  "description": "sell your accounts in discord easily and fast 🔥✨",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx node .",
+    "dev": "nodemon ."
+  },
+  "keywords": [
+    "discord bot",
+    "djs bot",
+    "account seller bot",
+    "discord bot account seller"
+  ],
+  "author": "Krypton000",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^0.8.2",
+    "@discordjs/rest": "0.1.0-canary.0",
+    "chalk": "^4.1.2",
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.3.1",
+    "express": "^4.17.1",
+    "node": "^17.0.1",
+    "probot-tax-calculator": "^3.0.0",
+    "quick.db": "^7.1.3"
+  }
+}

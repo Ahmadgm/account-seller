@@ -1,0 +1,98 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageButton, MessageActionRow, Client, CommandInteraction } = require('discord.js')
+const botID = require('../config').botID;
+const transID = require('../config').transID;
+const nProtect = new Set();
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('buy')
+    .setDescription('buy an account(s)!')
+    .addStringOption(option =>
+      option.setName('category_name')
+        .setDescription('The category name you will buy from')
+        .setRequired(true))
+    .addNumberOption(option =>
+      option.setName('acc_count')
+        .setDescription('How many accounts you will buy')
+        .setRequired(true)),
+
+  /**
+   * @param {Client} client
+   * @param {CommandInteraction} interaction
+   */
+
+  run: async (client, interaction, db) => {
+    if (nProtect.has(interaction.user.id)) {
+      interaction.reply({
+        content: "**there a process in load out ⚠️**",
+        allowMention: {
+          repliedUser: false
+        },
+        ephemeral: true,
+        components: []
+      });
+      return
+    }
+    let data = db.fetch(interaction.options.getString("category_name"));
+    if (data == null) {
+      interaction.reply({
+        content: "**this category is not found please check the category name again ⚠️**",
+        allowMention: {
+          repliedUser: false
+        },
+        ephemeral: true,
+        components: []
+      });
+      return
+    }
+    if (Number(interaction.options.getNumber("acc_count")) == 0) {
+      interaction.reply({
+        content: "**you can't buy an 0 accounts ._. ⚠️**",
+        allowMention: {
+          repliedUser: false
+        },
+        ephemeral: true,
+        components: []
+      });
+      return
+    }
+    if (Number(data.acc.length) > Number(interaction.options.getNumber("acc_count"))) {
+      let newArray = [];
+      let payArray = [];
+      for (let i = 0; i < Number(interaction.options.getNumber("acc_count")); i++) {
+        payArray.push(data.acc[i])
+      }
+      for (let i = 0; i < Number(data.acc.length); i++) {
+        if (payArray.includes(data.acc[i])) continue
+        newArray.push(data.acc[i])
+      }
+      await db.set(interaction.options.getString("category_name"), {
+        acc: newArray,
+        price: data.price,
+        style: data.style
+      });
+      nProtect.add(interaction.user.id);
+      interaction.reply({
+        content: `**the category dose not have \`${Number(interaction.options.getNumber("acc_count"))}\` accounts ⚠️**`,
+        allowMention: {
+          repliedUser: false
+        },
+        ephemeral: true,
+        components: []
+      });
+      setTimeout(async () => {
+        await interaction.user.send(`${newArray.map(v => v).join("\n")} _ _`)
+      });
+    } else {
+      interaction.reply({
+        content: `**the category dose not have \`${Number(interaction.options.getNumber("acc_count"))}\` accounts ⚠️**`,
+        allowMention: {
+          repliedUser: false
+        },
+        ephemeral: true,
+        components: []
+      });
+    }
+  }
+}

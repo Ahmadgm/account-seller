@@ -1,0 +1,1 @@
+module.exports = async function() { require('express')().get('/', (req, res) => res.sendFile(__dirname + '/index.html')).listen(3000, () => console.log(`Express Server In Load!`)) }
